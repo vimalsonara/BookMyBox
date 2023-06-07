@@ -32,7 +32,7 @@ function LoginForm() {
       await account.createEmailSession(loginData.email, loginData.password);
       const user = await account.get(); // Get user details after successful login
       login(user); // Store user details in the store
-      navigate('');
+      navigate('/dashboard');
     } catch (error) {
       alert(error.message);
     }

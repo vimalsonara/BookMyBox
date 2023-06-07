@@ -13,14 +13,14 @@ function App() {
   console.log(isAuthenticated);
   const authRoutes = (
     <Routes>
-      <Route exact path="" element={<Login />} />
+      <Route exact path="/" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     </Routes>
   );
 
   const adminRoutes = (
     <Routes>
-      <Route path="" index element={<Dashboard />} />
+      <Route path="/dashboard" index element={<Dashboard />} />
       <Route path="/bookings" index element={<Bookings />} />
     </Routes>
   );
