@@ -3,14 +3,15 @@ import { PropTypes } from 'prop-types';
 import { db } from '../../appwrite/appwriteConfig';
 import { useState } from 'react';
 import { ID } from 'appwrite';
-
+import useBoxesStore from '../../store/boxStore';
 function NewBox(props) {
   const [box, setBox] = useState({
     newBoxName: '',
   });
+  const [error, setError] = useState('');
 
+  const { boxes } = useBoxesStore();
   const userId = props.userData.$id;
-  console.log(userId);
 
   //   handle form input
   function handleInput(event) {
@@ -27,11 +28,23 @@ function NewBox(props) {
   function handleSubmit(event) {
     event.preventDefault();
 
+    const trimmedBoxName = box.newBoxName.trim(); // Trim whitespace from input value
+
+    const existingBox = boxes.find(
+      (existingBox) =>
+        existingBox.box.toLowerCase() === box.newBoxName.toLowerCase()
+    );
+
+    if (existingBox) {
+      setError('Box name already exists!');
+      return;
+    }
+
     const promise = db.createDocument(
       import.meta.env.VITE_APPWRITE_DATABASE_ID,
       import.meta.env.VITE_APPWRITE_BOX_COLLECTION_ID,
       ID.unique(),
-      { box: box.newBoxName, userId }
+      { box: trimmedBoxName, userId }
     );
     promise.then(
       function (res) {
@@ -70,6 +83,7 @@ function NewBox(props) {
           {/* <button className="h-8 w-40 rounded-lg  bg-green-500 text-white">
             Submit
           </button> */}
+          {error && <p className="text-red-500">{error}</p>}
           <div className="flex items-center gap-4">
             <button
               className="mt-2 w-20 rounded-lg  bg-yellow-500 p-2 font-bold text-white hover:bg-yellow-600"
