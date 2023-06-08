@@ -5,6 +5,7 @@ import { isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 import BookingStats from '../components/booking/BookingStats';
 import BookingDetails from '../components/booking/BookingDetails';
+import useBoxesStore from '../store/boxStore';
 import Avatar from 'react-avatar';
 
 function Bookings() {
@@ -13,6 +14,7 @@ function Bookings() {
   const { userDetails, logout } = useAuthStore();
 
   const navigate = useNavigate();
+  const clearBoxes = useBoxesStore((state) => state.clearBoxes);
 
   useEffect(() => {
     if (userDetails) {
@@ -41,6 +43,7 @@ function Bookings() {
   function handleLogout() {
     logout();
     navigate('/');
+    clearBoxes();
   }
   console.log(bookings);
 
@@ -72,11 +75,11 @@ function Bookings() {
             <p>Please wait...</p>
           ) : (
             <div>
-              <div className="mb-5 flex justify-between rounded-b-2xl bg-pink-500/40 p-2">
+              <div className="mb-5 flex justify-center rounded-b-2xl bg-pink-500/40 p-2 sm:justify-between">
                 <div className="w-30 rounded border  border-white  p-2 font-bold text-white hover:border-black hover:text-black hover:shadow-md hover:shadow-black">
                   <Link to={'/dashboard'}>Home</Link>
                 </div>
-                <div>
+                <div className="ml-3">
                   <Avatar
                     name={userDetails.name}
                     round
