@@ -2,7 +2,7 @@ import { PropTypes } from 'prop-types';
 
 function BookingStats(props) {
   return (
-    <div className="flex h-20 w-40 flex-col items-center justify-center rounded-lg  bg-gradient-to-br from-purple-400 to-pink-400 p-4 font-bold text-white ">
+    <div className="flex h-20 w-64 flex-col items-center justify-center rounded-lg  bg-gradient-to-br from-purple-400 to-pink-400 p-4 font-bold text-white sm:w-40">
       <h3>{props.collection}</h3>
       <p>{props.amount}</p>
     </div>

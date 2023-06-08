@@ -13,6 +13,7 @@ function Dashboard() {
 
   const { userDetails, logout } = useAuthStore();
   const { boxes, setBoxes } = useBoxesStore();
+  const clearBoxes = useBoxesStore((state) => state.clearBoxes);
 
   const navigate = useNavigate();
 
@@ -44,6 +45,7 @@ function Dashboard() {
   function handleLogout() {
     logout();
     navigate('/');
+    clearBoxes();
   }
 
   // close NewBox form when submit
@@ -57,12 +59,12 @@ function Dashboard() {
         <p>Loading...</p>
       ) : userDetails ? (
         <>
-          <div className="mb-5 flex justify-between rounded-b-2xl bg-pink-500/40 p-2">
+          <div className="mb-5 flex justify-center rounded-b-2xl bg-pink-500/40 p-2 sm:justify-between">
             {/* <img src="" alt="" /> */}
-            <div className="w-30 rounded border  border-white  p-2 font-bold text-white hover:border-black hover:text-black hover:shadow-md hover:shadow-black">
+            <div className="w-30 rounded border border-white  p-2 font-bold text-white hover:border-black hover:text-black hover:shadow-md hover:shadow-black">
               <Link to={'/bookings'}>Bookings</Link>
             </div>
-            <div>
+            <div className="ml-3">
               <Avatar name={userDetails.name} round color="#0055d1" size="50" />
               <button
                 className="mx-2 w-20 rounded border border-white p-2 font-bold text-white  hover:border-black hover:text-black hover:shadow-md hover:shadow-black"
@@ -94,7 +96,7 @@ function Dashboard() {
           )}
 
           {/* Box list */}
-          <div className="m-4 flex h-full flex-wrap justify-center gap-4">
+          <div className="m-4 flex flex-wrap justify-center gap-4 sm:items-center">
             {boxes.map((box) => (
               <Box
                 key={box.$id}
