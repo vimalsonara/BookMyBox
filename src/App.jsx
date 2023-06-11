@@ -9,8 +9,10 @@ import AdminRoutes from './routes/AdminRoutes';
 import './App.css';
 
 function App() {
+  // get isAuthenticated(boolean) from Authstore
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  console.log(isAuthenticated);
+
+  // Authentication routes
   const authRoutes = (
     <Routes>
       <Route exact path="/" element={<Login />} />
@@ -19,6 +21,7 @@ function App() {
     </Routes>
   );
 
+  // Private routes
   const adminRoutes = (
     <Routes>
       <Route path="/dashboard" index element={<Dashboard />} />
@@ -28,6 +31,7 @@ function App() {
 
   return (
     <>
+      {/* If not Authenticated than redirect to Auth routes else Admin routes */}
       {!isAuthenticated ? (
         <AuthRoutes>{authRoutes}</AuthRoutes>
       ) : (

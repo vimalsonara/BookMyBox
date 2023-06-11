@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useAuthStore from '../store/useAuthStore';
 import { db } from '../appwrite/appwriteConfig';
 import { isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BookingStats from '../components/booking/BookingStats';
 import BookingDetails from '../components/booking/BookingDetails';
 import Header from '../components/Header';
@@ -10,8 +10,11 @@ import Header from '../components/Header';
 function Bookings() {
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
+
+  // userDetails from Auth Store
   const { userDetails } = useAuthStore();
 
+  // get bookings list from database
   useEffect(() => {
     if (userDetails) {
       const currentUserId = userDetails.$id;
@@ -22,6 +25,7 @@ function Bookings() {
 
       promise.then(
         function (res) {
+          // filter bookings as per current user
           const filterBookings = res.documents.filter(
             (booking) => booking.userId === currentUserId
           );
@@ -55,14 +59,17 @@ function Bookings() {
     .reduce((total, booking) => total + Number(booking.price), 0);
 
   return (
-    <div>
+    <div className="h-full">
       {userDetails ? (
         <>
           {loading ? (
-            <p>Please wait...</p>
+            <p className="flex justify-center items-center h-full font-bold text-lg">
+              Please wait...
+            </p>
           ) : (
             <div>
               <Header path="/dashboard" nav="Home" />
+              {/* Bookings collection total display as per current(Date, Week, Month & Year)*/}
               <div>
                 {bookings.length > 0 ? (
                   <div>
@@ -84,6 +91,7 @@ function Bookings() {
                         amount={thisYearAmount}
                       />
                     </div>
+                    {/* Booking details component to display table of bookings */}
                     <div className="mt-6 flex  justify-center">
                       <BookingDetails bookingDetails={bookings} />
                     </div>

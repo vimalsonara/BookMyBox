@@ -10,11 +10,14 @@ function NewBox(props) {
     newBoxName: '',
   });
   const [error, setError] = useState('');
-  const { userDetails } = useAuthStore();
-  console.log(userDetails);
+
+  // All Box from BoxStore
   const { boxes } = useBoxesStore();
+
+  // userDetails from AuthStore
+  const { userDetails } = useAuthStore();
   const userId = userDetails.$id;
-  console.log(userId);
+
   //   handle form input
   function handleInput(event) {
     setBox((prevInput) => {
@@ -32,6 +35,7 @@ function NewBox(props) {
 
     const trimmedBoxName = box.newBoxName.trim(); // Trim whitespace from input value
 
+    // check if new box name is already exist
     const existingBox = boxes.find(
       (existingBox) =>
         existingBox.box.toLowerCase() === box.newBoxName.toLowerCase()
@@ -42,6 +46,7 @@ function NewBox(props) {
       return;
     }
 
+    // create document in database in BOX collection
     const promise = db.createDocument(
       import.meta.env.VITE_APPWRITE_DATABASE_ID,
       import.meta.env.VITE_APPWRITE_BOX_COLLECTION_ID,
@@ -82,10 +87,9 @@ function NewBox(props) {
             value={box.newBoxName}
             required
           />
-          {/* <button className="h-8 w-40 rounded-lg  bg-green-500 text-white">
-            Submit
-          </button> */}
+          {/* display error if entered input is already exist */}
           {error && <p className="text-red-500">{error}</p>}
+
           <div className="flex items-center gap-4">
             <button
               className="mt-2 w-20 rounded-lg  bg-yellow-500 p-2 font-bold text-white hover:bg-yellow-600"

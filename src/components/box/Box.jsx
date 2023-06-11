@@ -12,6 +12,7 @@ function Box(props) {
     setIsOpen(false);
   }
 
+  // Delete box on delete button clicked
   async function deleteBox() {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this box?'

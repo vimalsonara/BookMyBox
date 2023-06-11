@@ -15,10 +15,12 @@ function NewBooking(props) {
   });
 
   const [error, setError] = useState(false);
+
   const { userDetails } = useAuthStore();
   const boxId = props.boxId;
   const userId = userDetails.$id;
 
+  // handle form input
   function handleInput(event) {
     const { name, value } = event.target;
     setBookingDetails((prevInput) => {
@@ -29,6 +31,7 @@ function NewBooking(props) {
     });
   }
 
+  // handle form submit
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -37,11 +40,13 @@ function NewBooking(props) {
     const selectedDate = new Date(bookingDetails.date);
     const formattedSelectedDate = format(selectedDate, 'dd/MM/yyyy');
 
+    //display error if input date is older than current date
     if (formattedSelectedDate < formattedCurrentDate) {
       setError('Selected date cannot be older than the current date');
       return;
     }
 
+    // display error if input start time is greater than input endtime
     if (
       bookingDetails.startTime &&
       bookingDetails.endTime &&
@@ -51,6 +56,7 @@ function NewBooking(props) {
       return;
     }
 
+    // crete document in database Booking collection
     const promise = db.createDocument(
       import.meta.env.VITE_APPWRITE_DATABASE_ID,
       import.meta.env.VITE_APPWRITE_BOOKING_COLLECTION_ID,

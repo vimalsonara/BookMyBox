@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import NewBox from '../components/box/NewBox';
 import Box from '../components/box/Box';
 import { db } from '../appwrite/appwriteConfig';
@@ -11,13 +11,17 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { userDetails, logout } = useAuthStore();
-  const { boxes, setBoxes, clearBoxes } = useBoxesStore();
-  const navigate = useNavigate();
+  // UserDetails from Authstore
+  const { userDetails } = useAuthStore();
+  // Store get & set Boxes
+  const { boxes, setBoxes } = useBoxesStore();
 
+  // List documents(BOX)
   useEffect(() => {
     if (userDetails) {
+      // get currentUserId from userDetails object
       const currentUserId = userDetails.$id;
+      // list documents from database & collection
       const promise = db.listDocuments(
         import.meta.env.VITE_APPWRITE_DATABASE_ID,
         import.meta.env.VITE_APPWRITE_BOX_COLLECTION_ID
@@ -25,6 +29,7 @@ function Dashboard() {
 
       promise.then(
         function (res) {
+          // filter documents as per current user
           const filterDocuments = res.documents.filter(
             (document) => document.userId === currentUserId
           );
@@ -46,7 +51,9 @@ function Dashboard() {
   return (
     <div className="h-full">
       {loading ? (
-        <p>Loading...</p>
+        <p className="flex justify-center items-center h-full font-bold text-lg">
+          Loading...
+        </p>
       ) : userDetails ? (
         <>
           <Header path="/bookings" nav="Bookings" />
