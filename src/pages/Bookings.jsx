@@ -5,16 +5,12 @@ import { isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 import BookingStats from '../components/booking/BookingStats';
 import BookingDetails from '../components/booking/BookingDetails';
-import useBoxesStore from '../store/boxStore';
-import Avatar from 'react-avatar';
+import Header from '../components/Header';
 
 function Bookings() {
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
-  const { userDetails, logout } = useAuthStore();
-
-  const navigate = useNavigate();
-  const { clearBoxes } = useBoxesStore();
+  const { userDetails } = useAuthStore();
 
   useEffect(() => {
     if (userDetails) {
@@ -39,12 +35,6 @@ function Bookings() {
       );
     }
   }, [userDetails]);
-
-  function handleLogout() {
-    logout();
-    navigate('/');
-    clearBoxes();
-  }
 
   // Calculate amount based on time periods
   // daily bookings amount
@@ -72,25 +62,7 @@ function Bookings() {
             <p>Please wait...</p>
           ) : (
             <div>
-              <div className="mb-5 flex justify-center rounded-b-2xl bg-pink-500/40 p-2 sm:justify-between">
-                <div className="w-30 rounded border  border-white  p-2 font-bold text-white hover:border-black hover:text-black hover:shadow-md hover:shadow-black">
-                  <Link to={'/dashboard'}>Home</Link>
-                </div>
-                <div className="ml-3">
-                  <Avatar
-                    name={userDetails.name}
-                    round
-                    color="#0055d1"
-                    size="50"
-                  />
-                  <button
-                    className="mx-2 w-20 rounded border border-white p-2 font-bold text-white  hover:border-black hover:text-black hover:shadow-md hover:shadow-black"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
+              <Header path="/dashboard" nav="Home" />
               <div>
                 {bookings.length > 0 ? (
                   <div>

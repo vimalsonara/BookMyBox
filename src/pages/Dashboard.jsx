@@ -5,7 +5,7 @@ import Box from '../components/box/Box';
 import { db } from '../appwrite/appwriteConfig';
 import useAuthStore from '../store/useAuthStore';
 import useBoxesStore from '../store/boxStore';
-import Avatar from 'react-avatar';
+import Header from '../components/Header';
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -39,13 +39,6 @@ function Dashboard() {
     }
   }, [userDetails]);
 
-  // logout session
-  function handleLogout() {
-    logout();
-    navigate('/');
-    clearBoxes();
-  }
-
   // close NewBox form when submit
   function handleFormSubmit() {
     setIsOpen(false);
@@ -56,21 +49,7 @@ function Dashboard() {
         <p>Loading...</p>
       ) : userDetails ? (
         <>
-          <div className="mb-5 flex justify-center rounded-b-2xl bg-pink-500/40 p-2 sm:justify-between">
-            {/* <img src="" alt="" /> */}
-            <div className="w-30 rounded border border-white  p-2 font-bold text-white hover:border-black hover:text-black hover:shadow-md hover:shadow-black">
-              <Link to={'/bookings'}>Bookings</Link>
-            </div>
-            <div className="ml-3">
-              <Avatar name={userDetails.name} round color="#0055d1" size="50" />
-              <button
-                className="mx-2 w-20 rounded border border-white p-2 font-bold text-white  hover:border-black hover:text-black hover:shadow-md hover:shadow-black"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            </div>
-          </div>
+          <Header path="/bookings" nav="Bookings" />
           <div className="flex justify-center">
             <button
               className="mb-4 h-10 w-40  rounded border border-transparent border-white p-2 font-bold text-white hover:border-black  hover:text-black hover:shadow-md hover:shadow-black"
