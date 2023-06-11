@@ -1,25 +1,19 @@
 import { create } from 'zustand';
 
 const useAuthStore = create((set) => ({
-  isAuthenticated: false,
-  userDetails: null,
+  isAuthenticated: JSON.parse(localStorage.getItem('Authenticated')) || false,
+  userDetails: JSON.parse(localStorage.getItem('userDetails')) || null,
 
-  login: (user) => set({ isAuthenticated: true, userDetails: user }),
-  logout: () => set({ isAuthenticated: false, userDetails: null }),
-}));
-
-// Load state from localStorage on initialization
-const storedState = JSON.parse(localStorage.getItem('user'));
-if (storedState) {
-  useAuthStore.setState(storedState);
-}
-
-// Save state to localStorage whenever it changes
-useAuthStore.subscribe(
-  (state) => {
-    localStorage.setItem('user', JSON.stringify(state));
+  login: (user) => {
+    set({ isAuthenticated: true, userDetails: user });
+    localStorage.setItem('Authenticated', JSON.stringify(true));
+    localStorage.setItem('userDetails', JSON.stringify(user));
   },
-  (state) => state // Only save specific parts of the state if needed
-);
+  logout: () => {
+    set({ isAuthenticated: false, userDetails: null });
+    localStorage.removeItem('userDetails');
+    localStorage.removeItem('Authenticated');
+  },
+}));
 
 export default useAuthStore;
