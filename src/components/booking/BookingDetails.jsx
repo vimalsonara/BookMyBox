@@ -1,10 +1,33 @@
 import { PropTypes } from 'prop-types';
 import { format } from 'date-fns';
 import useBoxesStore from '../../store/boxStore';
+import { db } from '../../appwrite/appwriteConfig';
 
 function BookingDetails(props) {
   const { boxes } = useBoxesStore();
   const bookings = props.bookingDetails;
+
+  async function deleteBooking(bookingId) {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this booking?'
+    );
+    console.log(bookingId);
+    if (confirmDelete) {
+      try {
+        await db.deleteDocument(
+          import.meta.env.VITE_APPWRITE_DATABASE_ID,
+          import.meta.env.VITE_APPWRITE_BOOKING_COLLECTION_ID,
+          bookingId
+        );
+
+        // Refresh the page
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   return (
     <div className="overflow-x-auto p-2">
       <table className="w-full border border-gray-200 bg-white table-auto">
@@ -14,6 +37,7 @@ function BookingDetails(props) {
             <th className="px-4 py-2 text-left font-bold">Date & Box</th>
             <th className="px-4 py-2 text-left font-bold">Start & End</th>
             <th className="px-4 py-2 text-left font-bold">Price</th>
+            <th className="px-4 py-2 text-left font-bold">Action</th>
           </tr>
         </thead>
 
@@ -43,6 +67,16 @@ function BookingDetails(props) {
                   {booking.startTime} - {booking.endTime}
                 </td>
                 <td className="px-4 py-2">{booking.price}</td>
+                <td className="px-4 py-2">
+                  <button
+                    className="text-red-500 font-bold"
+                    onClick={() => {
+                      deleteBooking(booking.$id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             );
           })}
