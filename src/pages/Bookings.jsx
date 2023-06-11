@@ -14,7 +14,7 @@ function Bookings() {
   const { userDetails, logout } = useAuthStore();
 
   const navigate = useNavigate();
-  const clearBoxes = useBoxesStore((state) => state.clearBoxes);
+  const { clearBoxes } = useBoxesStore();
 
   useEffect(() => {
     if (userDetails) {
@@ -45,27 +45,24 @@ function Bookings() {
     navigate('/');
     clearBoxes();
   }
-  console.log(bookings);
 
   // Calculate amount based on time periods
+  // daily bookings amount
   const todayAmount = bookings
     .filter((booking) => isToday(new Date(booking.date)))
     .reduce((total, booking) => total + Number(booking.price), 0);
-
+  // current week's booking amount
   const thisWeekAmount = bookings
     .filter((booking) => isThisWeek(new Date(booking.date)))
     .reduce((total, booking) => total + Number(booking.price), 0);
-
+  // current month's booking amount
   const thisMonthAmount = bookings
     .filter((booking) => isThisMonth(new Date(booking.date)))
     .reduce((total, booking) => total + Number(booking.price), 0);
-
+  // current year booking amount
   const thisYearAmount = bookings
     .filter((booking) => isThisYear(new Date(booking.date)))
     .reduce((total, booking) => total + Number(booking.price), 0);
-
-  console.log('today:', todayAmount);
-  console.log('week:', thisWeekAmount);
 
   return (
     <div>

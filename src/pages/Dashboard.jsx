@@ -12,9 +12,7 @@ function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { userDetails, logout } = useAuthStore();
-  const { boxes, setBoxes } = useBoxesStore();
-  const clearBoxes = useBoxesStore((state) => state.clearBoxes);
-
+  const { boxes, setBoxes, clearBoxes } = useBoxesStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +50,6 @@ function Dashboard() {
   function handleFormSubmit() {
     setIsOpen(false);
   }
-  console.log('Box:', boxes);
   return (
     <div className="h-full">
       {loading ? (
@@ -90,7 +87,6 @@ function Dashboard() {
                 open={isOpen}
                 close={() => setIsOpen(false)}
                 onFormSubmit={handleFormSubmit}
-                userData={userDetails}
               />
             </div>
           )}

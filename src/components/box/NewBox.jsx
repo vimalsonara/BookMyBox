@@ -4,15 +4,17 @@ import { db } from '../../appwrite/appwriteConfig';
 import { useState } from 'react';
 import { ID } from 'appwrite';
 import useBoxesStore from '../../store/boxStore';
+import useAuthStore from '../../store/useAuthStore';
 function NewBox(props) {
   const [box, setBox] = useState({
     newBoxName: '',
   });
   const [error, setError] = useState('');
-
+  const { userDetails } = useAuthStore();
+  console.log(userDetails);
   const { boxes } = useBoxesStore();
-  const userId = props.userData.$id;
-
+  const userId = userDetails.$id;
+  console.log(userId);
   //   handle form input
   function handleInput(event) {
     setBox((prevInput) => {
@@ -105,7 +107,6 @@ function NewBox(props) {
 NewBox.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  userData: PropTypes.object,
 };
 
 export default NewBox;

@@ -7,7 +7,6 @@ function Box(props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const boxId = props.boxId;
-  const userData = props.userData;
   // close NewBooking form when submit
   function handleFormSubmit() {
     setIsOpen(false);
@@ -54,11 +53,7 @@ function Box(props) {
       {/* when Book button click it will show NewBooking */}
       {isOpen && (
         <div>
-          <NewBooking
-            onFormSubmit={handleFormSubmit}
-            boxId={boxId}
-            userData={userData}
-          />
+          <NewBooking onFormSubmit={handleFormSubmit} boxId={boxId} />
         </div>
       )}
     </>

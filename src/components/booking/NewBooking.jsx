@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { format } from 'date-fns';
 import { db } from '../../appwrite/appwriteConfig';
 import { ID } from 'appwrite';
+import useAuthStore from '../../store/useAuthStore';
 
 function NewBooking(props) {
   const [bookingDetails, setBookingDetails] = useState({
@@ -14,8 +15,9 @@ function NewBooking(props) {
   });
 
   const [error, setError] = useState(false);
+  const { userDetails } = useAuthStore();
   const boxId = props.boxId;
-  const userId = props.userData.$id;
+  const userId = userDetails.$id;
 
   function handleInput(event) {
     const { name, value } = event.target;
