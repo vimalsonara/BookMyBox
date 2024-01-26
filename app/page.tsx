@@ -1,3 +1,13 @@
+"use client";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+
 export default function Home() {
-  return <main>Hello Next</main>;
+  const user = useUser();
+  console.log(user);
+  return (
+    <main>
+      <div>{!user.isSignedIn && <SignInButton />}</div>
+      <div>{!!user.isSignedIn && <SignOutButton />}</div>
+    </main>
+  );
 }
