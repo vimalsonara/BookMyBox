@@ -20,6 +20,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  dotenv:
+    specifier: ^16.4.1
+    version: 16.4.1
   drizzle-orm:
     specifier: ^0.29.3
     version: 0.29.3(@libsql/client@0.4.0-pre.7)(@types/react@18.2.48)(react@18.2.0)
@@ -1698,6 +1701,11 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.6.2
+    dev: false
+
+  /dotenv@16.4.1:
+    resolution: {integrity: sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /dreamopt@0.8.0:

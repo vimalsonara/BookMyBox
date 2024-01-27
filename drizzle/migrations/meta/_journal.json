@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1706331015268,
+      "tag": "0000_silent_cardiac",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1706361772380,
+      "tag": "0001_needy_sabretooth",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1706364229115,
+      "tag": "0002_slow_night_nurse",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1706366291423,
+      "tag": "0003_sturdy_morgan_stark",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1706366747116,
+      "tag": "0004_concerned_mesmero",
+      "breakpoints": true
+    }
+  ]
+}
