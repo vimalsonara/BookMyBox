@@ -16,15 +16,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { addBox } from "@/actions/action";
-
-const boxFormSchema = z.object({
-  id: z.string().uuid(),
-  boxName: z.string().min(1).max(20).toLowerCase(),
-});
-
-export const extendedBoxFormSchema = boxFormSchema.extend({
-  userId: z.string().uuid(),
-});
+import { boxFormSchema } from "@/lib/validation";
 
 export default function Box() {
   const user = useUser();

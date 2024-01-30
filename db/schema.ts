@@ -3,7 +3,7 @@ import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const box = sqliteTable("box", {
   id: text("id").notNull().primaryKey(),
-  boxName: text("boxName", { length: 5 }).notNull(),
+  boxName: text("boxName", { length: 20 }).notNull(),
   userId: text("userId").notNull(),
   createdAt: text("createdAt")
     .default(sql`CURRENT_TIMESTAMP`)

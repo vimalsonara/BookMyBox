@@ -1,9 +1,11 @@
 "use server";
 
-import { extendedBookingFormSchema } from "@/app/booking/page";
-import { extendedBoxFormSchema } from "@/app/box/page";
 import { db } from "@/db";
 import { booking, box } from "@/db/schema";
+import {
+  extendedBookingFormSchema,
+  extendedBoxFormSchema,
+} from "@/lib/validation";
 import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -15,6 +17,14 @@ type NewBooking = z.infer<typeof extendedBookingFormSchema>;
 
 // add box
 export const addBox = async (data: NewBox) => {
+  const { userId } = auth();
+
+  if (!userId) return { error: "User not authenticated" };
+
+  const parsedData = extendedBoxFormSchema.safeParse(data);
+
+  if (!parsedData.success) return { error: parsedData.error.message };
+
   const newBox = await db
     .insert(box)
     .values({
@@ -47,6 +57,10 @@ export const addBooking = async (data: NewBooking) => {
   const { userId } = auth();
 
   if (!userId) return { error: "User not authenticated" };
+
+  const parsedData = extendedBookingFormSchema.safeParse(data);
+
+  if (!parsedData.success) return { error: parsedData.error.message };
 
   const newBooking = await db
     .insert(booking)

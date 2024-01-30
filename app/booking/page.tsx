@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { bookingFormSchema, extendedBoxFormSchema } from "@/lib/validation";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectContent } from "@radix-ui/react-select";
@@ -24,19 +25,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { extendedBoxFormSchema } from "../box/page";
 
 type BoxType = z.infer<typeof extendedBoxFormSchema>;
-
-const bookingFormSchema = z.object({
-  id: z.string().uuid(),
-  boxId: z.string().uuid(),
-  customerName: z.string().min(3).max(20).toLowerCase(),
-});
-
-export const extendedBookingFormSchema = bookingFormSchema.extend({
-  userId: z.string().uuid(),
-});
 
 export default function Booking() {
   const user = useUser();
@@ -62,7 +52,9 @@ export default function Booking() {
   });
 
   function onSubmit(values: z.infer<typeof bookingFormSchema>) {
+    console.log("values", values);
     console.log("submit");
+    console.log("user", user);
     const formData = {
       id: values.id,
       boxId: values.boxId,
@@ -70,7 +62,9 @@ export default function Booking() {
       userId: user.user?.id || "",
     };
 
-    addBooking(formData);
+    addBooking(formData).then((res) => {
+      console.log(res);
+    });
   }
 
   return (
