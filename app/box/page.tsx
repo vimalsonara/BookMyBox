@@ -16,27 +16,29 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import { addBox } from "@/actions/action";
-import { boxFormSchema } from "@/lib/validation";
+import { newBoxFormSchema } from "@/lib/validation";
+import { useEffect } from "react";
 
 export default function Box() {
   const user = useUser();
-  const form = useForm<z.infer<typeof boxFormSchema>>({
-    resolver: zodResolver(boxFormSchema),
+  const form = useForm<z.infer<typeof newBoxFormSchema>>({
+    resolver: zodResolver(newBoxFormSchema),
     defaultValues: {
       id: uuidv4(),
       boxName: "",
+      userId: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof boxFormSchema>) {
-    const formData = {
-      id: values.id,
-      boxName: values.boxName,
-      userId: user.user?.id || "",
-    };
-    console.log(formData);
-    addBox(formData);
+  function onSubmit(values: z.infer<typeof newBoxFormSchema>) {
+    addBox(values);
   }
+
+  useEffect(() => {
+    if (user.user) {
+      form.setValue("userId", user.user?.id || "");
+    }
+  }, [user]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between">

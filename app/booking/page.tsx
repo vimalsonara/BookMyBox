@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { bookingFormSchema, extendedBoxFormSchema } from "@/lib/validation";
+import { newBoxFormSchema, newBookingFormSchema } from "@/lib/validation";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectContent } from "@radix-ui/react-select";
@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-type BoxType = z.infer<typeof extendedBoxFormSchema>;
+type BoxType = z.infer<typeof newBoxFormSchema>;
 
 export default function Booking() {
   const user = useUser();
@@ -42,30 +42,27 @@ export default function Booking() {
     fetchBoxList();
   }, []);
 
-  const form = useForm<z.infer<typeof bookingFormSchema>>({
-    resolver: zodResolver(bookingFormSchema),
+  const form = useForm<z.infer<typeof newBookingFormSchema>>({
+    resolver: zodResolver(newBookingFormSchema),
     defaultValues: {
       id: uuidv4(),
       boxId: "",
       customerName: "",
+      userId: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof bookingFormSchema>) {
-    console.log("values", values);
-    console.log("submit");
-    console.log("user", user);
-    const formData = {
-      id: values.id,
-      boxId: values.boxId,
-      customerName: values.customerName,
-      userId: user.user?.id || "",
-    };
-
-    addBooking(formData).then((res) => {
+  function onSubmit(values: z.infer<typeof newBookingFormSchema>) {
+    addBooking(values).then((res) => {
       console.log(res);
     });
   }
+
+  useEffect(() => {
+    if (user.user) {
+      form.setValue("userId", user.user?.id || "");
+    }
+  }, [user]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between">
