@@ -20,20 +20,22 @@ export const addBox = async (data: NewBox) => {
 
   const parsedData = newBoxFormSchema.safeParse(data);
 
-  if (!parsedData.success) return { error: parsedData.error.message };
+  if (!parsedData.success) {
+    return { error: parsedData.error.message };
+  } else {
+    const newBox = await db
+      .insert(box)
+      .values({
+        id: data.id,
+        boxName: data.boxName,
+        userId: data.userId,
+      })
+      .returning();
 
-  const newBox = await db
-    .insert(box)
-    .values({
-      id: data.id,
-      boxName: data.boxName,
-      userId: data.userId,
-    })
-    .returning();
-
-  revalidatePath("/");
-  if (!newBox) return { error: "Error while creating box" };
-  if (newBox[0].id) return { success: newBox };
+    revalidatePath("/");
+    if (!newBox) return { error: "Error while creating box" };
+    if (newBox[0].id) return { success: newBox };
+  }
 };
 
 // list all box
@@ -57,21 +59,24 @@ export const addBooking = async (data: NewBooking) => {
 
   const parsedData = newBookingFormSchema.safeParse(data);
 
-  if (!parsedData.success) return { error: parsedData.error.message };
+  if (!parsedData.success) {
+    return { error: parsedData.error.message };
+  } else {
+    const newBooking = await db
+      .insert(booking)
+      .values({
+        id: data.id,
+        boxId: data.boxId,
+        customerName: data.customerName,
+        userId: userId,
+      })
+      .returning();
 
-  const newBooking = await db
-    .insert(booking)
-    .values({
-      id: data.id,
-      boxId: data.boxId,
-      customerName: data.customerName,
-      userId: userId,
-    })
-    .returning();
+    if (!newBooking) return { error: "Error while creating booking" };
 
-  if (!newBooking) return { error: "Error while creating booking" };
-  if (newBooking[0].id)
-    return {
-      success: newBooking,
-    };
+    if (newBooking[0].id)
+      return {
+        success: newBooking,
+      };
+  }
 };

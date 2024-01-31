@@ -18,9 +18,14 @@ import { useUser } from "@clerk/nextjs";
 import { addBox } from "@/actions/action";
 import { newBoxFormSchema } from "@/lib/validation";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Box() {
   const user = useUser();
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof newBoxFormSchema>>({
     resolver: zodResolver(newBoxFormSchema),
     defaultValues: {
@@ -30,8 +35,17 @@ export default function Box() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof newBoxFormSchema>) {
-    addBox(values);
+  async function onSubmit(values: z.infer<typeof newBoxFormSchema>) {
+    try {
+      const result = await addBox(values);
+      form.reset();
+      if (result?.success) {
+        toast.success("Box added successfully");
+        router.push("/box");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }
 
   useEffect(() => {

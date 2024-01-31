@@ -21,8 +21,10 @@ import { newBoxFormSchema, newBookingFormSchema } from "@/lib/validation";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectContent } from "@radix-ui/react-select";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
@@ -31,6 +33,8 @@ type BoxType = z.infer<typeof newBoxFormSchema>;
 export default function Booking() {
   const user = useUser();
   const [boxList, setBoxList] = useState<BoxType[]>([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBoxList = async () => {
@@ -45,22 +49,35 @@ export default function Booking() {
   const form = useForm<z.infer<typeof newBookingFormSchema>>({
     resolver: zodResolver(newBookingFormSchema),
     defaultValues: {
-      id: uuidv4(),
       boxId: "",
       customerName: "",
       userId: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof newBookingFormSchema>) {
-    addBooking(values).then((res) => {
-      console.log(res);
-    });
+  async function onSubmit(values: z.infer<typeof newBookingFormSchema>) {
+    try {
+      const result = await addBooking(values);
+
+      form.reset();
+
+      if (result?.success) {
+        toast.success("Booking added successfully");
+        router.push("/");
+      }
+
+      if (result?.error) {
+        toast(result.error);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }
 
   useEffect(() => {
     if (user.user) {
       form.setValue("userId", user.user?.id || "");
+      form.setValue("id", uuidv4());
     }
   }, [user]);
 
