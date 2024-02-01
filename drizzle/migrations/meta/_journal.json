@@ -43,6 +43,27 @@
       "when": 1706437319627,
       "tag": "0005_cynical_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1706761265060,
+      "tag": "0006_cooing_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1706761918129,
+      "tag": "0007_burly_squirrel_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1706764193883,
+      "tag": "0008_fast_hawkeye",
+      "breakpoints": true
     }
   ]
 }

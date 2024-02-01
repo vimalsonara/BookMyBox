@@ -26,4 +26,19 @@ export const newBookingFormSchema = z.object({
   userId: z.string({
     required_error: "Invalid user ID",
   }),
+  price: z.coerce
+    .number()
+    .lte(10000)
+    .positive({ message: "Price must be positive" }),
+  bookingDate: z
+    .string({ required_error: "Booking date required" })
+    .length(10, { message: "Booking date must be in DD-MM-YYYY format" }),
+  bookingStartTime: z
+    .string({ required_error: "Booking time required" })
+    .min(5, { message: "Booking time must be in HH:MM format" })
+    .max(5, { message: "Booking time must be in HH:MM format" }),
+  bookingEndTime: z
+    .string({ required_error: "Booking time required" })
+    .min(5, { message: "Booking time must be in HH:MM format" })
+    .max(5, { message: "Booking time must be in HH:MM format" }),
 });

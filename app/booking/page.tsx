@@ -52,10 +52,36 @@ export default function Booking() {
       boxId: "",
       customerName: "",
       userId: "",
+      price: 0,
+      bookingDate: "",
+      bookingStartTime: "",
+      bookingEndTime: "",
     },
+    criteriaMode: "all",
+    shouldFocusError: true,
   });
 
+  const validateStartEndTime = (startTime: string, endTime: string) => {
+    return startTime < endTime || "End time must be after start time";
+  };
+
   async function onSubmit(values: z.infer<typeof newBookingFormSchema>) {
+    const startTime = values.bookingStartTime;
+    const endTime = values.bookingEndTime;
+
+    const isValid = validateStartEndTime(startTime, endTime);
+
+    if (isValid !== true) {
+      // You can display an error message to the user
+      form.setError("bookingEndTime", {
+        type: "manual",
+        message: isValid,
+      });
+      return;
+    }
+
+    console.log(values);
+
     try {
       const result = await addBooking(values);
 
@@ -119,6 +145,62 @@ export default function Booking() {
                 <FormMessage />
               </FormItem>
             )}
+          />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <Input type="text" placeholder="Price" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bookingDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Booking date</FormLabel>
+                <Input type="date" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bookingStartTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Booking start time</FormLabel>
+                <Input type="time" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+            rules={{
+              validate: (value) => {
+                const endTime = form.getValues("bookingEndTime");
+                return validateStartEndTime(value, endTime);
+              },
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="bookingEndTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Booking end time</FormLabel>
+                <Input type="time" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+            rules={{
+              validate: (value) => {
+                const startTime = form.getValues("bookingStartTime");
+                return validateStartEndTime(startTime, value);
+              },
+            }}
           />
           <Button className="w-full" type="submit">
             Submit
