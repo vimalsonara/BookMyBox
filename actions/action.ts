@@ -17,6 +17,7 @@ type NewBox = z.infer<typeof newBoxFormSchema>;
 type NewBooking = z.infer<typeof newBookingFormSchema>;
 
 type NewCustomer = z.infer<typeof newCustomerSchema>;
+
 // add box
 export const addBox = async (data: NewBox) => {
   const { userId } = auth();
@@ -53,7 +54,11 @@ export const fetchBox = async () => {
     where: eq(box.userId, userId),
   });
 
-  return { success: data };
+  if (data.length > 0) {
+    return { success: data };
+  } else {
+    return { error: "No box found" };
+  }
 };
 
 // add customer
@@ -95,6 +100,23 @@ export const addCustomer = async (data: NewCustomer) => {
   }
 };
 
+// list customer
+export const fetchCustomer = async () => {
+  const { userId } = auth();
+
+  if (!userId) return { error: "User not authenticated" };
+
+  const data = await db.query.customer.findMany({
+    where: eq(customer.userId, userId),
+  });
+
+  if (data.length > 0) {
+    return { success: data };
+  } else {
+    return { error: "No customer found" };
+  }
+};
+
 // add booking
 export const addBooking = async (data: NewBooking) => {
   const { userId } = auth();
@@ -126,7 +148,7 @@ export const addBooking = async (data: NewBooking) => {
           id: data.id,
           boxId: data.boxId,
           customerId: data.customerId,
-          userId: userId,
+          userId: data.userId,
           price: data.price,
           bookingDate: data.bookingDate,
           bookingStartTime: data.bookingStartTime,

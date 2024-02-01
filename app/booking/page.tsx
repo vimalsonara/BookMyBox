@@ -1,6 +1,6 @@
 "use client";
 
-import { addBooking, fetchBox } from "@/actions/action";
+import { addBooking, fetchBox, fetchCustomer } from "@/actions/action";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { newBoxFormSchema, newBookingFormSchema } from "@/lib/validation";
+import {
+  newBoxFormSchema,
+  newBookingFormSchema,
+  newCustomerSchema,
+} from "@/lib/validation";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectContent } from "@radix-ui/react-select";
@@ -29,28 +33,50 @@ import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 type BoxType = z.infer<typeof newBoxFormSchema>;
+type CustomerType = z.infer<typeof newCustomerSchema>;
 
 export default function Booking() {
   const user = useUser();
   const [boxList, setBoxList] = useState<BoxType[]>([]);
+  const [customerList, setCustomerList] = useState<CustomerType[]>([]);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchBoxList = async () => {
       const box = await fetchBox();
+      console.log("box", box);
       if (box.success) {
         setBoxList(box.success);
       }
     };
-    fetchBoxList();
+
+    const fetchCustomerList = async () => {
+      const customer = await fetchCustomer();
+      if (customer.success) {
+        setCustomerList(customer.success);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        await Promise.all([fetchBoxList(), fetchCustomerList()]);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  console.log("boxList", boxList);
 
   const form = useForm<z.infer<typeof newBookingFormSchema>>({
     resolver: zodResolver(newBookingFormSchema),
     defaultValues: {
+      id: "",
       boxId: "",
-      customerName: "",
+      customerId: "",
       userId: "",
       price: 0,
       bookingDate: "",
@@ -66,13 +92,13 @@ export default function Booking() {
   };
 
   async function onSubmit(values: z.infer<typeof newBookingFormSchema>) {
+    console.log(values);
     const startTime = values.bookingStartTime;
     const endTime = values.bookingEndTime;
 
     const isValid = validateStartEndTime(startTime, endTime);
 
     if (isValid !== true) {
-      // You can display an error message to the user
       form.setError("bookingEndTime", {
         type: "manual",
         message: isValid,
@@ -85,15 +111,14 @@ export default function Booking() {
     try {
       const result = await addBooking(values);
 
-      form.reset();
-
       if (result?.success) {
         toast.success("Booking added successfully");
+        form.reset();
         router.push("/");
       }
 
       if (result?.error) {
-        toast(result.error);
+        toast.error(result.error);
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -137,15 +162,29 @@ export default function Booking() {
           />
           <FormField
             control={form.control}
-            name="customerName"
+            name="customerId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Customer Name</FormLabel>
-                <Input type="text" placeholder="Customer Name" {...field} />
+                <FormLabel>Customer name</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Customer" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-blue-500">
+                    {customerList.map((customer) => (
+                      <SelectItem key={customer.id} value={customer.id}>
+                        {customer.customerName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="price"
