@@ -1,1 +1,0 @@
-ALTER TABLE `box` RENAME COLUMN `varchar` TO `boxName`;

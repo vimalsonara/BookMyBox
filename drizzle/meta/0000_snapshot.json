@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "cef5b3d7-606f-4ebf-8dd4-c767b8922b1c",
-  "prevId": "4ed012c5-a1d4-4643-9e14-071faae9f993",
+  "id": "9bcfda91-e925-4a17-902c-fe63c79fe1a9",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "booking": {
       "name": "booking",
@@ -192,8 +192,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"booking\".\"customerName\"": "\"booking\".\"customerId\""
-    }
+    "columns": {}
   }
 }
