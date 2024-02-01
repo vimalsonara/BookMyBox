@@ -2,29 +2,43 @@ import { z } from "zod";
 
 export const newBoxFormSchema = z.object({
   id: z.string().uuid({ message: "Invalid UUID" }),
+  userId: z.string({
+    required_error: "Invalid user ID",
+  }),
   boxName: z
     .string()
     .min(1)
     .max(20, { message: "Box name must be between 1 and 20 characters" }),
+});
+
+export const newCustomerSchema = z.object({
+  id: z.string().uuid({ message: "Invalid UUID" }),
   userId: z.string({
     required_error: "Invalid user ID",
+  }),
+  customerName: z
+    .string()
+    .min(3)
+    .max(20, { message: "Customer name must be between 3 and 20 characters" }),
+  customerNumber: z.string().length(10, {
+    message: "Customer number must be 10 characters",
   }),
 });
 
 export const newBookingFormSchema = z.object({
   id: z.string().uuid({ message: "Invalid UUID" }),
+  userId: z.string({
+    required_error: "Invalid user ID",
+  }),
   boxId: z
     .string({
       required_error: "Invalid box ID",
       invalid_type_error: "Invalid box ID",
     })
     .nonempty({ message: "Please select box" }),
-  customerName: z
-    .string()
-    .min(3)
-    .max(20, { message: "Customer name must be between 3 and 20 characters" }),
-  userId: z.string({
-    required_error: "Invalid user ID",
+  customerId: z.string({
+    required_error: "Invalid customer ID",
+    invalid_type_error: "Invalid customer ID",
   }),
   price: z.coerce
     .number()
