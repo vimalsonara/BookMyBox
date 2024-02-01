@@ -29,7 +29,7 @@ export default function Box() {
   const form = useForm<z.infer<typeof newBoxFormSchema>>({
     resolver: zodResolver(newBoxFormSchema),
     defaultValues: {
-      id: uuidv4(),
+      id: "",
       boxName: "",
       userId: "",
     },
@@ -51,6 +51,7 @@ export default function Box() {
   useEffect(() => {
     if (user.user) {
       form.setValue("userId", user.user?.id || "");
+      form.setValue("id", uuidv4());
     }
   }, [user]);
 
