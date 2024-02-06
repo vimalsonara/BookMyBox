@@ -35,7 +35,7 @@ import { z } from "zod";
 type BoxType = z.infer<typeof newBoxFormSchema>;
 type CustomerType = z.infer<typeof newCustomerSchema>;
 
-export default function Booking() {
+export default function BookingForm() {
   const user = useUser();
   const [boxList, setBoxList] = useState<BoxType[]>([]);
   const [customerList, setCustomerList] = useState<CustomerType[]>([]);
@@ -114,7 +114,7 @@ export default function Booking() {
       if (result?.success) {
         toast.success("Booking added successfully");
         form.reset();
-        router.push("/");
+        router.push("/dashboard");
       }
 
       if (result?.error) {

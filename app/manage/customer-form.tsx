@@ -1,5 +1,6 @@
 "use client";
 
+import { addCustomer } from "@/actions/action";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,18 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { useUser } from "@clerk/nextjs";
-import { addBox, addCustomer } from "@/actions/action";
 import { newCustomerSchema } from "@/lib/validation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
-export default function Customer() {
+export default function CustomerForm() {
   const user = useUser();
 
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function Customer() {
       if (result?.success) {
         toast.success("Customer added successfully");
         form.reset();
-        router.push("/");
+        router.refresh();
       }
 
       if (result?.error) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { addBox } from "@/actions/action";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,18 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { useUser } from "@clerk/nextjs";
-import { addBox } from "@/actions/action";
 import { newBoxFormSchema } from "@/lib/validation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
 
-export default function Box() {
+export default function BoxForm() {
   const user = useUser();
 
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function Box() {
       form.reset();
       if (result?.success) {
         toast.success("Box added successfully");
-        router.push("/box");
+        router.refresh();
       }
     } catch (error: any) {
       toast.error(error.message);
