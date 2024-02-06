@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, auth } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -18,6 +18,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId } = auth();
+
   return (
     <ClerkProvider>
       <html lang="en">
@@ -29,7 +31,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <main>
-              <Header />
+              {userId && <Header />}
               {children}
             </main>
           </ThemeProvider>
