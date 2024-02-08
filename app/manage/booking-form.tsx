@@ -114,7 +114,7 @@ export default function BookingForm() {
       if (result?.success) {
         toast.success("Booking added successfully");
         form.reset();
-        router.push("/dashboard");
+        router.push("/");
       }
 
       if (result?.error) {
