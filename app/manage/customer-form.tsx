@@ -43,7 +43,7 @@ export default function CustomerForm() {
       if (result?.success) {
         toast.success("Customer added successfully");
         form.reset();
-        router.refresh();
+        window.location.reload();
       }
 
       if (result?.error) {

@@ -41,7 +41,7 @@ export default function BoxForm() {
       form.reset();
       if (result?.success) {
         toast.success("Box added successfully");
-        router.refresh();
+        window.location.reload();
       }
     } catch (error: any) {
       toast.error(error.message);
