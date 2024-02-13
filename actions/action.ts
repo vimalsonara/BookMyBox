@@ -396,6 +396,38 @@ export const listAllBooking = async () => {
   }
 };
 
+// booking by date
+export const listBookingByDate = async (date: string) => {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { error: "User not authenticated" };
+  }
+
+  const data = await db
+    .select({
+      bookingId: booking.id,
+      box: box.boxName,
+      customerName: customer.customerName,
+      customerNumber: customer.customerNumber,
+      price: booking.price,
+      bookingDate: booking.bookingDate,
+      bookingStartTime: booking.bookingStartTime,
+      bookingEndTime: booking.bookingEndTime,
+    })
+    .from(booking)
+    .leftJoin(customer, eq(booking.customerId, customer.id))
+    .leftJoin(box, eq(booking.boxId, box.id))
+    .where(and(eq(booking.userId, userId), eq(booking.bookingDate, date)))
+    .orderBy(desc(booking.createdAt));
+
+  if (data.length > 0) {
+    return { success: data };
+  } else {
+    return { error: "No booking found" };
+  }
+};
+
 // list all customer
 export const listAllCustomer = async () => {
   const { userId } = auth();
