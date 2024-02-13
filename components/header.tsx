@@ -11,6 +11,7 @@ export default function Header() {
         </Link>
         <div className="flex gap-2">
           <Link href={"/manage"}>Manage</Link>
+          <Link href={"/calender"}>Calender</Link>
         </div>
       </div>
       <SignedIn>
